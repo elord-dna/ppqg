@@ -18,6 +18,9 @@ public class Role {
     private int matk = 0;  // 角色魔法攻击力
     private int mdef = 0;  // 角色魔法防御力
 
+    private int sd = 1;  // 角色速度
+    private int startPos = 0;  // 角色初始位置，数值越大则越可能先行动
+
     private Attacker attacker;
 
     public Role() {
@@ -48,6 +51,7 @@ public class Role {
 
     /**
      * 判断角色是否存活
+     *
      * @return true 活着
      */
     public boolean isAlive() {
@@ -140,5 +144,21 @@ public class Role {
 
     public void setMdef(int mdef) {
         this.mdef = mdef;
+    }
+
+    public int getSd() {
+        return sd;
+    }
+
+    public void setSd(int sd) {
+        this.sd = sd;
+    }
+
+    public int getStartPos() {
+        return startPos;
+    }
+
+    public void setStartPos(int startPos) {
+        this.startPos = startPos;
     }
 }
