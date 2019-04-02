@@ -1,4 +1,4 @@
-package com.hzl.base;
+package com.hzl.base.role;
 
 import com.hzl.base.attacker.Attacker;
 

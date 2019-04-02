@@ -1,6 +1,6 @@
 package com.hzl.base.attacker;
 
-import com.hzl.base.Role;
+import com.hzl.base.role.Role;
 
 public interface Attacker {
 

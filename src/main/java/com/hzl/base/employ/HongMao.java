@@ -1,6 +1,6 @@
 package com.hzl.base.employ;
 
-import com.hzl.base.Role;
+import com.hzl.base.role.Role;
 import com.hzl.base.listener.FightListener;
 
 /**

@@ -1,6 +1,6 @@
 package com.hzl.base.battle;
 
-import com.hzl.base.Role;
+import com.hzl.base.role.Role;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +31,23 @@ public class Team {
         }
         roleList.add(r);
         return this;
+    }
+
+    /**
+     * 检查队伍是否存在存活的队员
+     * @return true 还有存活的队员; false 没有存活的队员
+     */
+    public boolean isAlive() {
+        if (roleList == null || roleList.isEmpty()) {
+            return false;
+        } else {
+            for (Role role : roleList) {
+                if (role.isAlive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public String getId() {

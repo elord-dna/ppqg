@@ -1,6 +1,6 @@
 package com.hzl.test;
 
-import com.hzl.base.Role;
+import com.hzl.base.role.Role;
 
 public class TestUtil {
 

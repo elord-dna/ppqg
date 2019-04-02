@@ -1,6 +1,6 @@
 package com.hzl.base.buff;
 
-import com.hzl.base.Role;
+import com.hzl.base.role.Role;
 
 /**
  * buff中的内容

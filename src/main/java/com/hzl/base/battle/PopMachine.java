@@ -1,6 +1,6 @@
 package com.hzl.base.battle;
 
-import com.hzl.base.Role;
+import com.hzl.base.role.Role;
 
 import java.util.*;
 
