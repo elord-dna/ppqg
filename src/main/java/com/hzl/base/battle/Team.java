@@ -1,6 +1,6 @@
 package com.hzl.base.battle;
 
-import com.hzl.base.role.Role;
+import com.hzl.base.role.FightRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class Team {
     private String id;
     private String name;
 
-    private List<Role> roleList;  // 队伍中所有的角色
+    private List<FightRole> roleList;  // 队伍中所有的角色
 
     public Team(String name) {
         id = "team_" + UUID.randomUUID().toString();
@@ -25,7 +25,7 @@ public class Team {
      * @param r
      * @return
      */
-    public Team add(Role r) {
+    public Team add(FightRole r) {
         if (roleList == null) {
             roleList = new ArrayList<>();
         }
@@ -41,7 +41,7 @@ public class Team {
         if (roleList == null || roleList.isEmpty()) {
             return false;
         } else {
-            for (Role role : roleList) {
+            for (FightRole role : roleList) {
                 if (role.isAlive()) {
                     return true;
                 }
@@ -58,7 +58,7 @@ public class Team {
         return name;
     }
 
-    public List<Role> getRoleList() {
+    public List<FightRole> getRoleList() {
         return roleList;
     }
 

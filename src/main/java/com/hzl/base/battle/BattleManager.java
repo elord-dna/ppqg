@@ -1,6 +1,6 @@
 package com.hzl.base.battle;
 
-import com.hzl.base.role.Role;
+import com.hzl.base.role.FightRole;
 
 import java.util.HashMap;
 import java.util.List;
@@ -73,24 +73,27 @@ public class BattleManager {
      * @param r
      * @return
      */
-    public Role addRole(Role r) {
+    public FightRole addRole(FightRole r) {
         Team t = addTeam();
         addRmt(r, t);
+        popMachine.add(r);
         return r;
     }
 
-    public Role addRole(Role r, Team t) {
+    public FightRole addRole(FightRole r, Team t) {
         if (teams.containsValue(t)) {
             addRmt(r, t);
+            popMachine.add(r);
         } else {
             System.err.println("添加失败，没有该队伍");
         }
         return r;
     }
 
-    public Role addRole(Role r, int n) {
+    public FightRole addRole(FightRole r, int n) {
         if (teams.containsKey(n)) {
             teams.get(n).add(r);
+            popMachine.add(r);
         } else {
             System.err.println("添加失败，没有该队伍");
         }
@@ -103,14 +106,15 @@ public class BattleManager {
 
     public void autoStart() throws InterruptedException {
         // todo
-        while (!checkGameOver()) {
+        while (checkGameOver()) {
             Thread.sleep(TIMESTAMP);
             // 当前是否有角色能够行动
-            Role role = popMachine.pop(TIMESTAMP);
+            FightRole role = popMachine.pop(TIMESTAMP);
             // todo buff check
             if (role != null) {
                 // 攻击一个随机的敌人
-                Role enemy = getRandomOpponentRole(role);
+                FightRole enemy = getRandomOpponentRole(role);
+                System.out.println(role.getName() + "攻击" + enemy.getName());
                 role.attack(enemy);
             }
         }
@@ -163,7 +167,7 @@ public class BattleManager {
      * @param role
      * @return
      */
-    private Team getOpponentTeam(Role role) {
+    private Team getOpponentTeam(FightRole role) {
         Team t = getRoleTeam(role);
         if (t == null) {
             return null;
@@ -196,11 +200,11 @@ public class BattleManager {
      * @param role
      * @return
      */
-    private Role getRandomOpponentRole(Role role) {
+    private FightRole getRandomOpponentRole(FightRole role) {
         Team team = getOpponentTeam(role);
         if (team != null) {
-            List<Role> roles = team.getRoleList();
-            Role r = null;
+            List<FightRole> roles = team.getRoleList();
+            FightRole r = null;
             while (r == null || !r.isAlive()) {
                 int rand = random.nextInt(roles.size());
                 r = roles.get(rand);
@@ -216,7 +220,7 @@ public class BattleManager {
      * @param role
      * @return
      */
-    private Team getRoleTeam(Role role) {
+    private Team getRoleTeam(FightRole role) {
         if (rmt == null) {
             return null;
         }
@@ -229,7 +233,7 @@ public class BattleManager {
      * @param r
      * @param t
      */
-    private void addRmt(Role r, Team t) {
+    private void addRmt(FightRole r, Team t) {
         t.add(r);
         if (rmt == null) {
             rmt = new HashMap<>();

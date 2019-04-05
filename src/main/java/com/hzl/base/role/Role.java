@@ -21,7 +21,7 @@ public class Role {
     private int sd = 1;  // 角色速度
     private int startPos = 0;  // 角色初始位置，数值越大则越可能先行动
 
-    private Attacker attacker;
+    protected Attacker attacker;
 
     public Role() {
         this("test");
@@ -56,10 +56,6 @@ public class Role {
      */
     public boolean isAlive() {
         return chp > 0 && mhp > 0;
-    }
-
-    public void attack(Role role) {
-        attacker.attacker(this, role);
     }
 
     public String getId() {

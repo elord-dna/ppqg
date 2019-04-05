@@ -1,6 +1,6 @@
 package com.hzl.base.attacker;
 
-import com.hzl.base.role.Role;
+import com.hzl.base.role.FightRole;
 
 public interface Attacker {
 
@@ -8,10 +8,10 @@ public interface Attacker {
         // todo
     }
 
-    default boolean attacker(Role a, Role b) {
+    default DamageResult attacker(FightRole a, FightRole b) {
         if (b.isAlive()) {
 
         }
-        return false;
+        return null;
     }
 }
