@@ -10,7 +10,8 @@ public class Test {
         role.init();
 
         FightRole role2 = TestUtil.randomRole(3);
-        role.setName("role2");
+        role2.setName("role2");
+        role2.init();
 
         BattleManager bm = new BattleManager();
         bm.init();

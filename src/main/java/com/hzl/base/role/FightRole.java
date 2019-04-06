@@ -2,6 +2,9 @@ package com.hzl.base.role;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hzl.base.attacker.DamageResult;
+import com.hzl.base.attacker.DamageType;
+import com.hzl.base.attacker.WuliAttacker;
+import com.hzl.base.battle.PopMachine;
 import com.hzl.base.skill.Skill;
 
 public class FightRole extends Role {
@@ -17,6 +20,7 @@ public class FightRole extends Role {
         fdef = getDef();
         fmatk = getMatk();
         fmdef = getMdef();
+        attacker = new WuliAttacker();
     }
 
     /**
@@ -30,9 +34,18 @@ public class FightRole extends Role {
 
     public void onDefend(DamageResult damageResult) {
         // todo
+        DamageType dt = damageResult.getDamageType();
+        if (dt.getDamageFamily().equals(DamageType.DamageFamily.WULI)) {
+            this.setChp(getChp() - damageResult.getWuliValue());
+        } else if (dt.getDamageFamily().equals(DamageType.DamageFamily.MOFA)) {
+            this.setChp(getChp() - damageResult.getMofaValue());
+        }
         // checkDeath 放在最后
     }
 
+    public void afterAttack(PopMachine popMachine) {
+        popMachine.updatePop(this, 100);
+    }
     /**
      * 施法前触发
      *

@@ -11,7 +11,7 @@ import java.util.*;
 public class PopMachine {
 
     private static final double MAX_POS = 100;
-    private List<RolePosition> positions;
+    private List<RolePosition> positions = new ArrayList<>();
 
     /**
      * 将角色添加到速度控制器
@@ -19,9 +19,6 @@ public class PopMachine {
      * @param role
      */
     public void add(FightRole role) {
-        if (positions == null) {
-            positions = new ArrayList<>();
-        }
         RolePosition pos = generate(role);
         positions.add(pos);
     }
@@ -44,7 +41,7 @@ public class PopMachine {
     public FightRole pop(long delta) {
         for (RolePosition pos : positions) {
             pos.pos += delta * pos.role.getSd() / 1000.0;
-//            System.out.println(delta * pos.role.getSd() / 1000.0);
+//            System.out.println("position mark " + pos.role.getName() + ": " + pos.pos);
         }
 //            positions.forEach(pos -> {
 //                pos.pos += delta * pos.role.getSd() / 1000;
@@ -54,6 +51,16 @@ public class PopMachine {
             return positions.get(0).role;
         }
         return null;
+    }
+
+    public void updatePop(FightRole role, int move) {
+        for (RolePosition position : positions) {
+            if (position.role.equals(role)) {
+                position.pos -= move;
+                System.out.println(position.role.getName() + ": " + position.pos);
+                break;
+            }
+        }
     }
 
     /**
@@ -91,9 +98,12 @@ public class PopMachine {
         @Override
         public int compareTo(RolePosition o) {
             if (pos > o.pos) {
+                return -1;
+            } else if (pos < o.pos) {
                 return 1;
+            } else {
+                return 0;
             }
-            return 0;
         }
     }
 }

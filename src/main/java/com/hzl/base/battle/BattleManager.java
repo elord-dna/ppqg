@@ -116,6 +116,8 @@ public class BattleManager {
                 FightRole enemy = getRandomOpponentRole(role);
                 System.out.println(role.getName() + "攻击" + enemy.getName());
                 role.attack(enemy);
+                System.out.println("剩余生命值: " + enemy.getChp() + "/" + enemy.getMhp());
+                role.afterAttack(popMachine);
             }
         }
     }
@@ -187,9 +189,12 @@ public class BattleManager {
             return null;
         }
         int n = tmt.get(team.getId());
-        int rand = random.nextInt(teams.size());
+        int rand = random.nextInt(teams.size()) + 1;
+//        System.out.println(rand);
+//        System.out.println(teams.keySet());
+//        System.out.println(teams.get(rand) == null);
         while (rand == n || !teams.get(rand).isAlive()) {
-            rand = random.nextInt(teams.size());
+            rand = random.nextInt(teams.size()) + 1;
         }
         return teams.get(rand);
     }

@@ -24,6 +24,8 @@ public class TestUtil {
         role.setMmp(20 + random.nextInt(lv) * lv);
 
         role.setSd(random.nextInt(lv) + 10);
+
+        role.setChp(role.getMhp());
         return role;
     }
 }

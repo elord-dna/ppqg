@@ -27,11 +27,19 @@ public class DamageType {
         POISON;    // 毒
     }
 
-    enum DamageFamily {
+    public enum DamageFamily {
         HEAL,      // 治疗
         WULI,      // 物理伤害
         MOFA,      // 魔法伤害
         HUNHE,     // 混合伤害
         HUNDUN;    // 混沌伤害
+    }
+
+    public DamageFamily getDamageFamily() {
+        return damageFamily;
+    }
+
+    public ElementType getElementType() {
+        return elementType;
     }
 }
