@@ -8,10 +8,10 @@ import com.hzl.base.battle.PopMachine;
 import com.hzl.base.skill.Skill;
 
 public class FightRole extends Role {
-    private int fatk = 1;
-    private int fdef = 1;
-    private int fmatk = 1;
-    private int fmdef = 1;
+    protected int fatk = 1;
+    protected int fdef = 1;
+    protected int fmatk = 1;
+    protected int fmdef = 1;
 
     private int houyao = 100;  // 攻击后摇
 

@@ -1,12 +1,12 @@
 package com.hzl.base.employ;
 
-import com.hzl.base.role.Role;
 import com.hzl.base.listener.FightListener;
+import com.hzl.base.role.FightRole;
 
 /**
  * 虹猫
  */
-public class HongMao extends Role implements FightListener {
+public class HongMao extends FightRole implements FightListener {
     @Override
     public void onFight() {
 
