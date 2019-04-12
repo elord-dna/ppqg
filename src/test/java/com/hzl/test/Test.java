@@ -1,6 +1,7 @@
 package com.hzl.test;
 
 import com.hzl.base.battle.BattleManager;
+import com.hzl.base.employ.Fighter;
 import com.hzl.base.role.FightRole;
 
 public class Test {
@@ -13,10 +14,15 @@ public class Test {
         role2.setName("role2");
         role2.init();
 
+        FightRole role3 = TestUtil.randomRole(4, Fighter.class);
+        role3.setName("role3");
+        role3.init();
+
         BattleManager bm = new BattleManager();
         bm.init();
         bm.addRole(role);
         bm.addRole(role2);
+        bm.addRole(role3);
 
         try {
             bm.autoStart();

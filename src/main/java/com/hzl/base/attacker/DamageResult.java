@@ -11,6 +11,7 @@ public class DamageResult {
     private int mofaValue;
     private int hundunValue;
     private int healValue;
+
     private FightRole from;  // 伤害来源
     private FightRole to;    // 伤害对象
 
@@ -21,6 +22,12 @@ public class DamageResult {
         this.to = to;
     }
 
+    public int getSumValue() {
+        if (damageType.getDamageFamily().equals(DamageType.DamageFamily.HEAL)) {
+            return healValue;
+        }
+        return wuliValue + mofaValue + hundunValue;
+    }
     public DamageType getDamageType() {
         return damageType;
     }

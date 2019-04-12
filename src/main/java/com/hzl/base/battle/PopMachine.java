@@ -40,7 +40,11 @@ public class PopMachine {
      */
     public FightRole pop(long delta) {
         for (RolePosition pos : positions) {
-            pos.pos += delta * pos.role.getSd() / 1000.0;
+            if (pos.role.isAlive()) {
+                pos.pos += delta * pos.role.getSd() / 1000.0;
+            } else {
+                pos.pos = pos.role.getStartPos();
+            }
 //            System.out.println("position mark " + pos.role.getName() + ": " + pos.pos);
         }
 //            positions.forEach(pos -> {
@@ -57,7 +61,6 @@ public class PopMachine {
         for (RolePosition position : positions) {
             if (position.role.equals(role)) {
                 position.pos -= move;
-                System.out.println(position.role.getName() + ": " + position.pos);
                 break;
             }
         }

@@ -114,9 +114,9 @@ public class BattleManager {
             if (role != null) {
                 // 攻击一个随机的敌人
                 FightRole enemy = getRandomOpponentRole(role);
-                System.out.println(role.getName() + "攻击" + enemy.getName());
+                System.out.println(String.format("[%s]攻击[%s]", role.getName(), enemy.getName()));
                 role.attack(enemy);
-                System.out.println("剩余生命值: " + enemy.getChp() + "/" + enemy.getMhp());
+//                System.out.println(String.format("[%s]到剩余生命值: %d/%d", enemy.getName(), enemy.getChp(), enemy.getMhp()));
                 role.afterAttack(popMachine);
             }
         }
@@ -150,14 +150,20 @@ public class BattleManager {
      */
     private boolean checkGameOver() {
         int leftTeam = 0;
+        Team team = null;
         for (Map.Entry<Integer, Team> entry : teams.entrySet()) {
             Team t = entry.getValue();
             if (t.isAlive()) {
                 leftTeam++;
+                team = t;
             }
         }
         if (leftTeam > 1) {
             return true;
+        } else if (leftTeam == 1) {
+            System.err.println(String.format("对战结束, 胜利队伍是[%s]", team.getName()));
+        } else {
+            System.err.println(String.format("对战结束, 没有胜利队伍"));
         }
         return false;
     }

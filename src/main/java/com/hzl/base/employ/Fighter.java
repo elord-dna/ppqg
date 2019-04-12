@@ -3,6 +3,8 @@ package com.hzl.base.employ;
 import com.hzl.base.attacker.WuliAttacker;
 import com.hzl.base.battle.PopMachine;
 import com.hzl.base.role.FightRole;
+import com.hzl.base.skill.HeavyHit;
+import com.hzl.base.skill.Skill;
 
 import java.util.List;
 import java.util.Random;
@@ -20,25 +22,9 @@ public class Fighter extends FightRole {
         fmatk = getMatk();
         fmdef = getMdef();
         attacker = new WuliAttacker();
+        // 自带被动技能
+        Skill skill_1 = new HeavyHit(this.getLv());
+        addSkill(skill_1);
     }
 
-    /**
-     * 50%概率提升攻击力
-     * @param fightRoles
-     */
-    @Override
-    public void onAttack(FightRole... fightRoles) {
-        if (random.nextBoolean()) {
-            this.fatk += getLv();
-            isAtkUp = true;
-        }
-    }
-
-    @Override
-    public void afterAttack(PopMachine popMachine) {
-        if (isAtkUp) {
-            fatk -= getLv();
-        }
-        super.afterAttack(popMachine);
-    }
 }

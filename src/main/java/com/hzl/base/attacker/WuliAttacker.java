@@ -12,6 +12,9 @@ public class WuliAttacker implements Attacker {
         // 造成无属性的物理伤害
         DamageType dt = new DamageType(DamageType.DamageFamily.WULI, DamageType.ElementType.NONE);
         int value = a.getFatk() - b.getFdef();
+        if (value < 0) {
+            value = 0;
+        }
         dr.setDamageType(dt);
         dr.setWuliValue(value);
         return dr;

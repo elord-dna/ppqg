@@ -5,7 +5,11 @@ import com.hzl.base.attacker.DamageResult;
 import com.hzl.base.attacker.DamageType;
 import com.hzl.base.attacker.WuliAttacker;
 import com.hzl.base.battle.PopMachine;
+import com.hzl.base.skill.PassiveSkill;
 import com.hzl.base.skill.Skill;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FightRole extends Role {
     protected int fatk = 1;
@@ -14,6 +18,8 @@ public class FightRole extends Role {
     protected int fmdef = 1;
 
     private int houyao = 100;  // 攻击后摇
+
+    private List<PassiveSkill> passiveSkillList = new ArrayList<>();
 
     public void init() {
         fatk = getAtk();
@@ -29,7 +35,10 @@ public class FightRole extends Role {
      * @param fightRoles
      */
     public void onAttack(FightRole... fightRoles) {
-        // todo
+        for (PassiveSkill skill : passiveSkillList) {
+            skill.onAttack(this, fightRoles);
+        }
+        // todo buff触发部分, 可能最终会将被动技能并入到buff部分, 使用相同到触发方式
     }
 
     public void onDefend(DamageResult damageResult) {
@@ -43,7 +52,10 @@ public class FightRole extends Role {
         // checkDeath 放在最后
     }
 
-    public void afterAttack(PopMachine popMachine) {
+    public void afterAttack(PopMachine popMachine, FightRole... fightRoles) {
+        for (PassiveSkill skill : passiveSkillList) {
+            skill.afterAttack(this, fightRoles);
+        }
         popMachine.updatePop(this, 100);
     }
     /**
@@ -70,12 +82,38 @@ public class FightRole extends Role {
         onAttack(role);
         DamageResult dr = attacker.attacker(this, role);
         role.onDefend(dr);
+        System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]到剩余生命值: %d/%d", getName(), dr.getSumValue(),
+                role.getName(), role.getChp(), role.getMhp()));
     }
 
     private void checkDeath() {
         if (getChp() <= 0) {
             setChp(0);
         }
+    }
+
+    /**
+     * 添加技能
+     * @param skill
+     * @return
+     */
+    public FightRole addSkill(Skill skill) {
+        // todo
+        if (skill instanceof PassiveSkill) {
+            passiveSkillList.add((PassiveSkill) skill);
+        }
+        return this;
+    }
+
+    public int addAtk(int up) {
+        this.fatk += up;
+        // todo 并且触发攻击上升带来的其他效果
+        return up;
+    }
+
+    public int reduceAtk(int val) {
+        this.fatk -= val;
+        return val;
     }
 
     public int getFatk() {
