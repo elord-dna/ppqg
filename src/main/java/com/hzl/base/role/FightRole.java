@@ -42,7 +42,10 @@ public class FightRole extends Role {
     }
 
     public void onDefend(DamageResult damageResult) {
-        // todo
+        //
+        for (PassiveSkill skill : passiveSkillList) {
+            skill.onDefend(damageResult);
+        }
         DamageType dt = damageResult.getDamageType();
         if (dt.getDamageFamily().equals(DamageType.DamageFamily.WULI)) {
             this.setChp(getChp() - damageResult.getWuliValue());

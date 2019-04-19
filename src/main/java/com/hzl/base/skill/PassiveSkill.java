@@ -1,5 +1,6 @@
 package com.hzl.base.skill;
 
+import com.hzl.base.attacker.DamageResult;
 import com.hzl.base.role.FightRole;
 
 /**
@@ -20,5 +21,8 @@ public interface PassiveSkill extends Skill {
     default void onCast() {
     }
     default void afterCast() {
+    }
+
+    default void onDefend(DamageResult damageResult) {
     }
 }

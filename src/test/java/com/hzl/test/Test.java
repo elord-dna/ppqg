@@ -3,6 +3,8 @@ package com.hzl.test;
 import com.hzl.base.battle.BattleManager;
 import com.hzl.base.employ.Fighter;
 import com.hzl.base.role.FightRole;
+import com.hzl.base.skill.AtkBlock;
+import com.hzl.base.skill.Skill;
 
 public class Test {
     public static void main(String[] args) {
@@ -17,6 +19,9 @@ public class Test {
         FightRole role3 = TestUtil.randomRole(4, Fighter.class);
         role3.setName("role3");
         role3.init();
+
+        Skill atkBlcok = new AtkBlock(5);
+        role2.addSkill(atkBlcok);
 
         BattleManager bm = new BattleManager();
         bm.init();
