@@ -48,6 +48,7 @@ public class FightRole extends Role {
         }
         DamageType dt = damageResult.getDamageType();
         if (dt.getDamageFamily().equals(DamageType.DamageFamily.WULI)) {
+            // 其实还需要判断属性之类的更复杂的东西，但是目前属性伤害还没有系统化
             this.setChp(getChp() - damageResult.getWuliValue());
         } else if (dt.getDamageFamily().equals(DamageType.DamageFamily.MOFA)) {
             this.setChp(getChp() - damageResult.getMofaValue());

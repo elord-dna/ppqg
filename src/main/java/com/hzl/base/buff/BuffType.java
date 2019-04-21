@@ -5,8 +5,8 @@ package com.hzl.base.buff;
  */
 public enum BuffType {
     DAMAGE,  // 伤害
-    HEAL,
-    STRENGTH,
-    NEFF
+    HEAL,    // 治疗
+    STRENGTH,   // 强化
+    NEFF     // 削弱
     ;
 }

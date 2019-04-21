@@ -12,7 +12,7 @@ public class DamageType {
         this.elementType = elementType;
     }
 
-    enum ElementType {
+    public enum ElementType {
         NONE,      // 无
         FIRE,      // 火
         WATER,     // 水
