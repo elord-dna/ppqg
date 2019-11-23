@@ -1,6 +1,9 @@
 package com.hzl.base.battle;
 
+import com.hzl.base.attacker.DamageBody;
+import com.hzl.base.attacker.SkillBody;
 import com.hzl.base.role.FightRole;
+import com.hzl.base.skill.NormalAttack;
 
 import java.util.HashMap;
 import java.util.List;
@@ -114,10 +117,19 @@ public class BattleManager {
             if (role != null) {
                 // 攻击一个随机的敌人
                 FightRole enemy = getRandomOpponentRole(role);
-                System.out.println(String.format("[%s]攻击[%s]", role.getName(), enemy.getName()));
-                role.attack(enemy);
-//                System.out.println(String.format("[%s]到剩余生命值: %d/%d", enemy.getName(), enemy.getChp(), enemy.getMhp()));
-                role.afterAttack(popMachine);
+//                System.out.println(String.format("[%s]攻击[%s]", role.getName(), enemy.getName()));
+                // 改一些方法测试，将attack改为cast模式
+//                role.attack(enemy);
+//                SkillBody body = role.cast(new NormalAttack(), enemy);  // 攻击，攻击方生成攻击信息
+                SkillBody body = role.castRandom(enemy);
+                System.out.println(String.format("[%s]使用[%s]攻击[%s]", role.getName(), body.getSkill().getSkillId(), enemy.getName()));
+                enemy.onAimed(body);                                    // 被攻击方处理攻击信息
+                DamageBody db = body.getSkill().onEffect(role, enemy, body);  // 生成伤害信息
+                enemy.afterCasted(db);                                  // 处理伤害信息，这一步应该交由bm管理
+
+                // 用简单的方法替代，afterAttack方法不应该带popMachine
+//                role.afterAttack(popMachine);
+                popMachine.updatePop(role, 100);
             }
         }
     }

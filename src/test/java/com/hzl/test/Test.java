@@ -3,25 +3,24 @@ package com.hzl.test;
 import com.hzl.base.battle.BattleManager;
 import com.hzl.base.employ.Fighter;
 import com.hzl.base.role.FightRole;
-import com.hzl.base.skill.AtkBlock;
-import com.hzl.base.skill.Skill;
+import com.hzl.base.skill.HundredPunch;
 
 public class Test {
     public static void main(String[] args) {
         FightRole role = TestUtil.randomRole(3);
-        role.setName("role1");
+        role.setName("黄培钧");
         role.init();
 
-        FightRole role2 = TestUtil.randomRole(3);
-        role2.setName("role2");
+        FightRole role2 = TestUtil.randomRole(4);
+        role2.setName("黄自力");
         role2.init();
 
-        FightRole role3 = TestUtil.randomRole(4, Fighter.class);
-        role3.setName("role3");
+        FightRole role3 = TestUtil.randomRole(3, Fighter.class);
+        role3.setName("丑人");
         role3.init();
 
-        Skill atkBlcok = new AtkBlock(5);
-        role2.addSkill(atkBlcok);
+        HundredPunch hp = new HundredPunch(4);
+        role2.bindActiveSkill(hp);
 
         BattleManager bm = new BattleManager();
         bm.init();

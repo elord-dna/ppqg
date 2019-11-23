@@ -2,6 +2,7 @@ package com.hzl.test;
 
 import com.hzl.base.employ.Fighter;
 import com.hzl.base.role.FightRole;
+import com.hzl.base.skill.NormalAttack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
@@ -28,6 +29,7 @@ public class TestUtil {
         role.setSd(random.nextInt(lv) + 10);
 
         role.setChp(role.getMhp());
+        role.bindActiveSkill(new NormalAttack());
         return role;
     }
 
@@ -48,6 +50,8 @@ public class TestUtil {
             role.setSd(random.nextInt(lv) + 10);
 
             role.setChp(role.getMhp());
+
+            role.bindActiveSkill(new NormalAttack());
         } catch (Exception e) {
             e.printStackTrace();
         }

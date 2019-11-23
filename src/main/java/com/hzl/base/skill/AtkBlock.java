@@ -34,4 +34,14 @@ public class AtkBlock implements PassiveSkill {
             }
         }
     }
+
+    @Override
+    public int getType() {
+        return 0;
+    }
+
+    @Override
+    public String getSkillId() {
+        return name;
+    }
 }

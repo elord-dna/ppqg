@@ -17,6 +17,9 @@ public abstract class Buff implements IBuff {
 
     private double duringTime = -1;  // 持续时间
     private int duration = -1;  // 持续时间都计数器表达
+    private int durationCount = -1;  // 当前计数器所在位置
+
+    private boolean unique = false; // 是否唯一
 
     public String getId() {
         return id;
@@ -80,5 +83,13 @@ public abstract class Buff implements IBuff {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public boolean isUnique() {
+        return unique;
+    }
+
+    public void setUnique(boolean unique) {
+        this.unique = unique;
     }
 }

@@ -8,4 +8,7 @@ public class RandomUtil {
     public static double randDouble() {
         return random.nextDouble();
     }
+    public static int randInt(int max) {
+        return random.nextInt(max);
+    }
 }

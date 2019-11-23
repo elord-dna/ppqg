@@ -1,12 +1,15 @@
 package com.hzl.base.role;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hzl.base.attacker.DamageResult;
-import com.hzl.base.attacker.DamageType;
-import com.hzl.base.attacker.WuliAttacker;
+import com.hzl.base.attacker.*;
+import com.hzl.base.attacker.element.EleDam;
 import com.hzl.base.battle.PopMachine;
+import com.hzl.base.buff.Buff;
+import com.hzl.base.buff.BuffList;
+import com.hzl.base.skill.ActiveSkill;
 import com.hzl.base.skill.PassiveSkill;
 import com.hzl.base.skill.Skill;
+import com.hzl.base.util.RandomUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +22,12 @@ public class FightRole extends Role {
 
     private int houyao = 100;  // 攻击后摇
 
+    // 被动技能
     private List<PassiveSkill> passiveSkillList = new ArrayList<>();
+    // 主动技能
+    private List<ActiveSkill> activeSkillList = new ArrayList<>();
+    // buff 列表
+    private BuffList buffList = new BuffList();
 
     public void init() {
         fatk = getAtk();
@@ -65,21 +73,24 @@ public class FightRole extends Role {
     /**
      * 施法前触发
      *
-     * @param skill
-     * @param fightRoles
+     * @param skill 使用的技能，可能删除
+     * @param body 技能体
+     * @param fightRoles 目标
      */
-    public void onCast(Skill skill, FightRole... fightRoles) {
+    public void onCast(Skill skill, SkillBody body, FightRole... fightRoles) {
         // todo
+        for (PassiveSkill ps : passiveSkillList) {
+            ps.onCast(this, body, fightRoles);
+        }
     }
 
     /**
      * 被施法后触发
      *
-     * @param skill
-     * @param originRole
+     * @param body
      */
-    public void onAimed(Skill skill, FightRole originRole) {
-        // todo
+    public void onAimed(SkillBody body) {
+        // todo 触发被指定为目标后的一些触发，比如防御被动
     }
 
     public void attack(FightRole role) {
@@ -88,6 +99,56 @@ public class FightRole extends Role {
         role.onDefend(dr);
         System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]到剩余生命值: %d/%d", getName(), dr.getSumValue(),
                 role.getName(), role.getChp(), role.getMhp()));
+    }
+
+    /**
+     * 目前还是只用一个目标
+     * @param skill
+     * @param to
+     * @return
+     */
+    public SkillBody cast(ActiveSkill skill, FightRole to) {
+        SkillBody body = skill.generateSkillBody(this, to);
+//        System.out.println(String.format("[%s]使用了[%s]", this.getName(), skill.getSkillId()));
+        onCast(skill, body, to);
+        return body;
+    }
+
+    /**
+     * 被攻击，处理DamageBody，感觉这部分可以拿到battleManager里
+     * @param db
+     * @return
+     */
+    public boolean afterCasted(DamageBody db) {
+        int w = db.getWuliValue();
+        int m = db.getMofaValue();
+        int h = db.getHealValue();
+        EleDam ed = db.getEleDam();
+        // todo 目前只处理物理伤害
+        if (w<1) {
+            w = 1;
+        }
+        this.setChp(this.getChp() - w);
+        checkDeath();
+        System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]到剩余生命值: %d/%d", db.getFrom().getName(), w + m,
+                getName(), getChp(), getMhp()));
+        boolean death = getChp() == 0;
+        if (death) {
+            onDeath();
+        }
+        return getChp() == 0;
+    }
+
+    /**
+     * 触发死亡
+     */
+    public void onDeath() {
+        // todo
+        System.err.println(String.format("OMG！[%s]狗带了！", this.getName()));
+    }
+
+    public FightRole addBuff(Buff buff) {
+        return this;
     }
 
     private void checkDeath() {
@@ -107,6 +168,60 @@ public class FightRole extends Role {
             passiveSkillList.add((PassiveSkill) skill);
         }
         return this;
+    }
+
+    /**
+     * 绑定主动技能
+     * @param skill
+     * @return
+     */
+    public FightRole bindActiveSkill(ActiveSkill skill) {
+        ActiveSkill as = hasActiveSkill(skill);
+        if (as != null) {
+            this.unbindActiveSkill(as);
+        }
+        activeSkillList.add(skill);
+        // 触发onBind效果
+        skill.onBind(this);
+        return this;
+    }
+
+    /**
+     * 解绑主动技能
+     * @param skill
+     * @return
+     */
+    public FightRole unbindActiveSkill(ActiveSkill skill) {
+        if (activeSkillList.contains(skill)) {
+            activeSkillList.remove(skill);
+            skill.onUnBind(this);
+        }
+        return this;
+    }
+
+    /**
+     * 是否拥有某主动技能
+     * @param skill
+     * @return
+     */
+    public ActiveSkill hasActiveSkill(ActiveSkill skill) {
+        for (ActiveSkill as : activeSkillList) {
+            if (skill.getSkillId().equals(as.getSkillId())) {
+                return as;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 测试方法，随机释放一个主动技能
+     * @param to 目标
+     * @return
+     */
+    public SkillBody castRandom(FightRole to) {
+        int len = activeSkillList.size();
+        int pos = RandomUtil.randInt(len);
+        return this.cast(activeSkillList.get(pos), to);
     }
 
     public int addAtk(int up) {

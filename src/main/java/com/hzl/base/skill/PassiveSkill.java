@@ -1,10 +1,11 @@
 package com.hzl.base.skill;
 
 import com.hzl.base.attacker.DamageResult;
+import com.hzl.base.attacker.SkillBody;
 import com.hzl.base.role.FightRole;
 
 /**
- * 被动技能
+ * 被动技能 todo 提取出一个新的被动，分成攻击型被动和防御型被动
  */
 public interface PassiveSkill extends Skill {
     /**
@@ -18,7 +19,14 @@ public interface PassiveSkill extends Skill {
     default void afterAttack(FightRole triggerRole, FightRole... targetRoles) {
     }
 
-    default void onCast() {
+    /**
+     * 新的触发方式
+     * @param triggerRole
+     * @param body
+     * @param targetRoles
+     */
+    default void onCast(FightRole triggerRole, SkillBody body, FightRole... targetRoles) {
+
     }
     default void afterCast() {
     }
