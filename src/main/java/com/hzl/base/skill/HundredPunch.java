@@ -1,11 +1,9 @@
 package com.hzl.base.skill;
 
-import com.hzl.base.attacker.DamageBody;
 import com.hzl.base.attacker.SkillBody;
 import com.hzl.base.role.FightRole;
 
 public class HundredPunch implements ActiveSkill {
-    private String kind;
     private String name = "百万吨拳击";
     private int lv = 1;
     private int cost = 0;  // 消耗

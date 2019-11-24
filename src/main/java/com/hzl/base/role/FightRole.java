@@ -20,6 +20,9 @@ public class FightRole extends Role {
     protected int fmatk = 1;
     protected int fmdef = 1;
 
+    protected double ct = 0.1;
+    protected double cte = 0.5;
+
     private int houyao = 100;  // 攻击后摇
 
     // 被动技能
@@ -125,18 +128,38 @@ public class FightRole extends Role {
         int h = db.getHealValue();
         EleDam ed = db.getEleDam();
         // todo 目前只处理物理伤害
-        if (w<1) {
-            w = 1;
-        }
         this.setChp(this.getChp() - w);
         checkDeath();
-        System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]到剩余生命值: %d/%d", db.getFrom().getName(), w + m,
-                getName(), getChp(), getMhp()));
+        if (db.isCt()) {
+            System.err.println(String.format("[%s]暴击了！造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
+                    getName(), getChp(), getMhp()));
+        } else {
+            System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
+                    getName(), getChp(), getMhp()));
+        }
         boolean death = getChp() == 0;
         if (death) {
             onDeath();
         }
         return getChp() == 0;
+    }
+
+    /**
+     * 攻击后，处理DamageBody
+     * 发生在afterCasted之后，也可以拿到bm里空值
+     * @param db
+     */
+    public void afterCastedHandle(DamageBody db) {
+        if (db.isMiss()) {
+            // 未命中触发
+        } else {
+            if (db.isCt()) {
+                // 暴击预处理
+            }
+
+            // 通常触发
+            FightHandle.handleHealthDrink(this, db);
+        }
     }
 
     /**
@@ -265,6 +288,22 @@ public class FightRole extends Role {
 
     public void setFmdef(int fmdef) {
         this.fmdef = fmdef;
+    }
+
+    public double getCt() {
+        return ct;
+    }
+
+    public void setCt(double ct) {
+        this.ct = ct;
+    }
+
+    public double getCte() {
+        return cte;
+    }
+
+    public void setCte(double cte) {
+        this.cte = cte;
     }
 
     public int getHouyao() {

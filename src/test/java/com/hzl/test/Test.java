@@ -3,11 +3,12 @@ package com.hzl.test;
 import com.hzl.base.battle.BattleManager;
 import com.hzl.base.employ.Fighter;
 import com.hzl.base.role.FightRole;
+import com.hzl.base.skill.BloodyHit;
 import com.hzl.base.skill.HundredPunch;
 
 public class Test {
     public static void main(String[] args) {
-        FightRole role = TestUtil.randomRole(3);
+        FightRole role = TestUtil.randomRole(4);
         role.setName("黄培钧");
         role.init();
 
@@ -18,6 +19,9 @@ public class Test {
         FightRole role3 = TestUtil.randomRole(3, Fighter.class);
         role3.setName("丑人");
         role3.init();
+
+        BloodyHit bh = new BloodyHit(3);
+        role.bindActiveSkill(bh);
 
         HundredPunch hp = new HundredPunch(4);
         role2.bindActiveSkill(hp);

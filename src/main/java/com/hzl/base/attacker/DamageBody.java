@@ -15,8 +15,19 @@ public class DamageBody {
 
     // 是否暴击
     private boolean ct = false;
+    private boolean miss = false;
+
+    private int healthDrink = 0;  // 如果有吸血，吸血的数值
 
     private int healValue = 0;  // todo 暂时不用这个数值
+
+    /**
+     * 是否命中
+     * @return
+     */
+    public boolean isMiss() {
+        return miss;
+    }
 
     public int getWuliValue() {
         return wuliValue;
@@ -72,5 +83,17 @@ public class DamageBody {
 
     public void setCt(boolean ct) {
         this.ct = ct;
+    }
+
+    public void setMiss(boolean miss) {
+        this.miss = miss;
+    }
+
+    public int getHealthDrink() {
+        return healthDrink;
+    }
+
+    public void setHealthDrink(int healthDrink) {
+        this.healthDrink = healthDrink;
     }
 }

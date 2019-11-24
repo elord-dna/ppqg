@@ -143,6 +143,22 @@ public class SkillBody {
         this.mainElement = mainElement;
     }
 
+    public double getAdditionCt() {
+        return additionCt;
+    }
+
+    public void setAdditionCt(double additionCt) {
+        this.additionCt = additionCt;
+    }
+
+    public double getAdditionCte() {
+        return additionCte;
+    }
+
+    public void setAdditionCte(double additionCte) {
+        this.additionCte = additionCte;
+    }
+
     public int getAdditionType() {
         return additionType;
     }

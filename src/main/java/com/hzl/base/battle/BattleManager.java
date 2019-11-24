@@ -21,7 +21,7 @@ public class BattleManager {
     private Map<String, Integer> tmt;  // team map team 队伍与队伍的映射
     private static final int MAX_TEAM_SIZE = 4;  // 最大队伍数量
     private PopMachine popMachine;
-    private static final long TIMESTAMP = 50;  // 时间间隔
+    private static final long TIMESTAMP = 30;  // 时间间隔
 
     private Random random = new Random();
 
@@ -107,6 +107,11 @@ public class BattleManager {
         // todo
     }
 
+    public void afterHandle(FightRole role, FightRole to, DamageBody db) {
+        to.afterCasted(db);
+        role.afterCastedHandle(db);
+    }
+
     public void autoStart() throws InterruptedException {
         // todo
         while (checkGameOver()) {
@@ -125,11 +130,11 @@ public class BattleManager {
                 System.out.println(String.format("[%s]使用[%s]攻击[%s]", role.getName(), body.getSkill().getSkillId(), enemy.getName()));
                 enemy.onAimed(body);                                    // 被攻击方处理攻击信息
                 DamageBody db = body.getSkill().onEffect(role, enemy, body);  // 生成伤害信息
-                enemy.afterCasted(db);                                  // 处理伤害信息，这一步应该交由bm管理
+                afterHandle(role, enemy, db);                                 // 处理伤害信息
 
                 // 用简单的方法替代，afterAttack方法不应该带popMachine
 //                role.afterAttack(popMachine);
-                popMachine.updatePop(role, 100);
+                popMachine.updatePop(role, 60);
             }
         }
     }
