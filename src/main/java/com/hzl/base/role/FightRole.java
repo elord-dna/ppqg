@@ -127,21 +127,28 @@ public class FightRole extends Role {
         int m = db.getMofaValue();
         int h = db.getHealValue();
         EleDam ed = db.getEleDam();
-        // todo 目前只处理物理伤害
-        this.setChp(this.getChp() - w);
-        checkDeath();
-        if (db.isCt()) {
-            System.err.println(String.format("[%s]暴击了！造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
-                    getName(), getChp(), getMhp()));
-        } else {
-            System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
-                    getName(), getChp(), getMhp()));
+        // todo 目前只处理物理伤害，和治疗
+        int type = db.getType();
+        if (type == 0) {
+            this.setChp(this.getChp() - w);
+            checkDeath();
+            if (db.isCt()) {
+                System.err.println(String.format("[%s]暴击了！造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
+                        getName(), getChp(), getMhp()));
+            } else {
+                System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
+                        getName(), getChp(), getMhp()));
+            }
+            boolean death = getChp() == 0;
+            if (death) {
+                onDeath();
+            }
+            return getChp() == 0;
+        } else if (type == 1) {
+            // 治疗
+            heal(db.getFrom(), h);
         }
-        boolean death = getChp() == 0;
-        if (death) {
-            onDeath();
-        }
-        return getChp() == 0;
+        return false;
     }
 
     /**
@@ -247,6 +254,12 @@ public class FightRole extends Role {
         return this.cast(activeSkillList.get(pos), to);
     }
 
+    public ActiveSkill randomSkill() {
+        int len = activeSkillList.size();
+        int pos = RandomUtil.randInt(len);
+        return activeSkillList.get(pos);
+    }
+
     public int addAtk(int up) {
         this.fatk += up;
         // todo 并且触发攻击上升带来的其他效果
@@ -256,6 +269,26 @@ public class FightRole extends Role {
     public int reduceAtk(int val) {
         this.fatk -= val;
         return val;
+    }
+
+    public void heal(Role from, int value) {
+        // 受到到治疗
+        onHeal(from, value);
+        if (getMhp() - getChp() >= value) {
+            setChp(getChp() + value);
+        } else {
+            setChp(getMhp());
+        }
+        System.err.println(String.format("[%s]受到了治疗，回复了%d点生命，当前生命%d/%d",getName(), value,
+                getChp(), getMhp()));
+    }
+
+    public void onHeal(Role role, int value) {
+        // todo 受到治疗时的连锁反应
+    }
+
+    public void costMp(int value) {
+        setCmp(getCmp() - value);
     }
 
     public int getFatk() {
@@ -312,6 +345,10 @@ public class FightRole extends Role {
 
     public void setHouyao(int houyao) {
         this.houyao = houyao;
+    }
+
+    public List<ActiveSkill> getActiveSkillList() {
+        return activeSkillList;
     }
 
     @Override

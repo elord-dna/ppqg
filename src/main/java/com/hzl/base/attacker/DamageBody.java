@@ -13,6 +13,8 @@ public class DamageBody {
     private Role from;
     private Role to;
 
+    private int type = 0; // 0表示伤害 1表示治疗
+
     // 是否暴击
     private boolean ct = false;
     private boolean miss = false;
@@ -75,6 +77,14 @@ public class DamageBody {
 
     public void setTo(Role to) {
         this.to = to;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public boolean isCt() {

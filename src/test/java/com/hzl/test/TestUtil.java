@@ -29,6 +29,7 @@ public class TestUtil {
         role.setSd(random.nextInt(lv) + 10);
 
         role.setChp(role.getMhp());
+        role.setCmp(role.getMmp());
         role.bindActiveSkill(new NormalAttack());
         return role;
     }

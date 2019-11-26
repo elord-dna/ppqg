@@ -6,13 +6,12 @@ import com.hzl.base.skill.HeavyHit;
 import com.hzl.base.skill.Skill;
 
 import java.util.List;
-import java.util.Random;
 
 public class Fighter extends FightRole {
 
     private List<Object> list;
-    Random random = new Random();
-    boolean isAtkUp = false;
+//    Random random = new Random();
+//    boolean isAtkUp = false;
 
     @Override
     public void init() {

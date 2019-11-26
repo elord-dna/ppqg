@@ -3,6 +3,8 @@ package com.hzl.base.skill;
 import com.hzl.base.attacker.DamageBody;
 import com.hzl.base.attacker.SkillBody;
 import com.hzl.base.role.FightRole;
+import com.hzl.base.skill.target.TargetPermission;
+import com.hzl.base.skill.target.TargetType;
 import com.hzl.base.util.RandomUtil;
 
 public interface ActiveSkill extends Skill {
@@ -22,6 +24,10 @@ public interface ActiveSkill extends Skill {
 
     default int getCost() {
         return 0;
+    }
+
+    default TargetPermission getTargetPermission() {
+        return new TargetPermission(TargetType.OPPONENT);
     }
 
     /**
@@ -48,6 +54,7 @@ public interface ActiveSkill extends Skill {
         DamageBody body = new DamageBody();
         body.setFrom(role);
         body.setTo(to);
+        body.setType(0);
 
         Skill skill = skillBody.getSkill();
         int type = skill.getType();
@@ -87,6 +94,8 @@ public interface ActiveSkill extends Skill {
             }
             body.setWuliValue(randomDamage(v1));
             body.setMofaValue(randomDamage(v2));
+        } else if (type == 4) {
+            body.setType(1);
         }
 
         // todo 处理属性伤害

@@ -5,6 +5,7 @@ import com.hzl.base.employ.Fighter;
 import com.hzl.base.role.FightRole;
 import com.hzl.base.skill.BloodyHit;
 import com.hzl.base.skill.HundredPunch;
+import com.hzl.base.skill.LifeRecover;
 
 public class Test {
     public static void main(String[] args) {
@@ -12,7 +13,7 @@ public class Test {
         role.setName("黄培钧");
         role.init();
 
-        FightRole role2 = TestUtil.randomRole(4);
+        FightRole role2 = TestUtil.randomRole(5);
         role2.setName("黄自力");
         role2.init();
 
@@ -22,9 +23,13 @@ public class Test {
 
         BloodyHit bh = new BloodyHit(3);
         role.bindActiveSkill(bh);
+        role.bindActiveSkill(new HundredPunch(2));
+        role.bindActiveSkill(new LifeRecover(2));
 
         HundredPunch hp = new HundredPunch(4);
         role2.bindActiveSkill(hp);
+
+        role3.bindActiveSkill(new LifeRecover(2));
 
         BattleManager bm = new BattleManager();
         bm.init();

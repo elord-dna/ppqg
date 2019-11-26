@@ -3,12 +3,11 @@ package com.hzl.base.battle;
 import com.hzl.base.attacker.DamageBody;
 import com.hzl.base.attacker.SkillBody;
 import com.hzl.base.role.FightRole;
+import com.hzl.base.skill.ActiveSkill;
 import com.hzl.base.skill.NormalAttack;
+import com.hzl.base.skill.target.TargetPermission;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * 战斗管理器
@@ -21,7 +20,7 @@ public class BattleManager {
     private Map<String, Integer> tmt;  // team map team 队伍与队伍的映射
     private static final int MAX_TEAM_SIZE = 4;  // 最大队伍数量
     private PopMachine popMachine;
-    private static final long TIMESTAMP = 30;  // 时间间隔
+    private static final long TIMESTAMP = 25;  // 时间间隔
 
     private Random random = new Random();
 
@@ -107,6 +106,12 @@ public class BattleManager {
         // todo
     }
 
+    /**
+     * 处理伤害后续
+     * @param role
+     * @param to
+     * @param db
+     */
     public void afterHandle(FightRole role, FightRole to, DamageBody db) {
         to.afterCasted(db);
         role.afterCastedHandle(db);
@@ -117,20 +122,25 @@ public class BattleManager {
         while (checkGameOver()) {
             Thread.sleep(TIMESTAMP);
             // 当前是否有角色能够行动
-            FightRole role = popMachine.pop(TIMESTAMP);
+            FightRole role = popMachine.pop(TIMESTAMP * 2);
             // todo buff check
             if (role != null) {
+                ActiveSkill skill = getRandomAvailableActiveSkill(role);
+                FightRole target = getAvailableTarget(role, skill);
+
+                SkillBody body = role.cast(skill, target);
+                System.out.println(String.format("[%s]对[%s]使用了[%s]", role.getName(),
+                        target.getName(), body.getSkill().getSkillId()));
+                target.onAimed(body);
+                DamageBody db = body.getSkill().onEffect(role, target, body);
+                afterHandle(role, target, db);
                 // 攻击一个随机的敌人
-                FightRole enemy = getRandomOpponentRole(role);
-//                System.out.println(String.format("[%s]攻击[%s]", role.getName(), enemy.getName()));
-                // 改一些方法测试，将attack改为cast模式
-//                role.attack(enemy);
-//                SkillBody body = role.cast(new NormalAttack(), enemy);  // 攻击，攻击方生成攻击信息
-                SkillBody body = role.castRandom(enemy);
-                System.out.println(String.format("[%s]使用[%s]攻击[%s]", role.getName(), body.getSkill().getSkillId(), enemy.getName()));
-                enemy.onAimed(body);                                    // 被攻击方处理攻击信息
-                DamageBody db = body.getSkill().onEffect(role, enemy, body);  // 生成伤害信息
-                afterHandle(role, enemy, db);                                 // 处理伤害信息
+//                FightRole enemy = getRandomOpponentRole(role);
+//                SkillBody body = role.castRandom(enemy);
+//                System.out.println(String.format("[%s]使用[%s]攻击[%s]", role.getName(), body.getSkill().getSkillId(), enemy.getName()));
+//                enemy.onAimed(body);                                    // 被攻击方处理攻击信息
+//                DamageBody db = body.getSkill().onEffect(role, enemy, body);  // 生成伤害信息
+//                afterHandle(role, enemy, db);                                 // 处理伤害信息
 
                 // 用简单的方法替代，afterAttack方法不应该带popMachine
 //                role.afterAttack(popMachine);
@@ -240,6 +250,71 @@ public class BattleManager {
             return r;
         }
         return null;
+    }
+
+    /**
+     * 获取一个随机的队友
+     * @param role
+     * @param isAlive 是否存活
+     * @return
+     */
+    private FightRole getRandomTeamRole(FightRole role, boolean isAlive) {
+        Team team = getRoleTeam(role);
+        if (team != null) {
+            List<FightRole> roles = team.getRoleList();
+            FightRole r = null;
+            while (r==null || r.isAlive() != isAlive) {
+                int rand = random.nextInt(roles.size());
+                r = roles.get(rand);
+            }
+            return r;
+        }
+        return null;
+    }
+
+    /**
+     * 获得随机的可使用的技能
+     * @param role
+     * @return
+     */
+    private ActiveSkill getRandomAvailableActiveSkill(FightRole role) {
+        List<ActiveSkill> activeSkills = new ArrayList<>(role.getActiveSkillList());
+        ActiveSkill ak = null;
+        boolean flag = false;
+        while (!(flag = isActiveSkillAvailable(role, ak)) && activeSkills.size()>0) {
+            int pos = random.nextInt(activeSkills.size());
+            ak = activeSkills.remove(pos);
+        }
+        if (!flag) {
+            ak = new NormalAttack();
+        }
+        return ak;
+    }
+
+    /**
+     * 判断技能是否满足释放条件：消耗条件，可选目标条件
+     * @param role
+     * @param skill
+     * @return
+     */
+    private boolean isActiveSkillAvailable(FightRole role, ActiveSkill skill) {
+        // 暂时忽略目标要求 todo
+        if (skill == null) {
+            return false;
+        }
+        if (role.getCmp() >= skill.getCost()) {
+            return true;
+        }
+        return false;
+    }
+
+    private FightRole getAvailableTarget(FightRole role, ActiveSkill skill) {
+        TargetPermission permission = skill.getTargetPermission();
+        switch (permission.getTargetType()) {
+            case OPPONENT: return getRandomOpponentRole(role);
+            case TEAM: return getRandomTeamRole(role, true);
+            default: return role;
+        }
     }
 
     /**
