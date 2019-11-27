@@ -6,6 +6,7 @@ import com.hzl.base.role.FightRole;
 import com.hzl.base.skill.BloodyHit;
 import com.hzl.base.skill.HundredPunch;
 import com.hzl.base.skill.LifeRecover;
+import com.hzl.base.skill.hongmao.FireBlade;
 
 public class Test {
     public static void main(String[] args) {
@@ -23,7 +24,7 @@ public class Test {
 
         BloodyHit bh = new BloodyHit(3);
         role.bindActiveSkill(bh);
-        role.bindActiveSkill(new HundredPunch(2));
+        role.bindActiveSkill(new FireBlade(2));
         role.bindActiveSkill(new LifeRecover(2));
 
         HundredPunch hp = new HundredPunch(4);

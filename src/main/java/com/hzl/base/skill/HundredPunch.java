@@ -33,7 +33,7 @@ public class HundredPunch implements ActiveSkill {
         body.setFrom(role);
         body.setTo(to[0]);
 
-        body.setAdditionAtk(2+(int)(lv*2));
+        body.setAdditionAtk(2+(int)(lv*1.3));
         body.setAtkp(0.2 + 0.1*lv);
 
         body.setSkill(this);

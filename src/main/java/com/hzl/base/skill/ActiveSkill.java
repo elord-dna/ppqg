@@ -2,6 +2,8 @@ package com.hzl.base.skill;
 
 import com.hzl.base.attacker.DamageBody;
 import com.hzl.base.attacker.SkillBody;
+import com.hzl.base.attacker.element.AbstractElement;
+import com.hzl.base.attacker.element.EleDam;
 import com.hzl.base.role.FightRole;
 import com.hzl.base.skill.target.TargetPermission;
 import com.hzl.base.skill.target.TargetType;
@@ -98,7 +100,25 @@ public interface ActiveSkill extends Skill {
             body.setType(1);
         }
 
-        // todo 处理属性伤害
+        // 处理属性伤害 方法一
+        int eleType = skillBody.getMainElement();
+        if (eleType > 0) {
+            EleDam eleDam = new EleDam();
+            eleDam.setType(eleType);
+            AbstractElement ae = null;
+            switch (eleType) {
+                case 1: ae = skillBody.getFireElement(); break;
+                case 2: ae = skillBody.getLightingElement(); break;
+            }
+            int atk = ae.getAdditionAtk();
+            double adp = ae.getAdp();
+            int dam = ae.getAdditionDam();
+            int def = ae.getAdditionDef();
+            int value = (int)(((atk - def) * (1+adp) + (dam -def)) * (1+ae.getDep()));
+            value = value>0?value:0;
+            eleDam.setValue(value);
+            body.setEleDam(eleDam);
+        }
 
         return body;
     }

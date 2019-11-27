@@ -127,17 +127,21 @@ public class FightRole extends Role {
         int m = db.getMofaValue();
         int h = db.getHealValue();
         EleDam ed = db.getEleDam();
-        // todo 目前只处理物理伤害，和治疗
+        int ev = 0;
+        if (ed != null) {
+            ev = ed.getValue();
+        }
+        // todo 目前只处理物理伤害，和治疗，还有元素伤害
         int type = db.getType();
         if (type == 0) {
-            this.setChp(this.getChp() - w);
+            this.setChp(this.getChp() - w - ev);
             checkDeath();
             if (db.isCt()) {
-                System.err.println(String.format("[%s]暴击了！造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
-                        getName(), getChp(), getMhp()));
+                System.err.println(String.format("[%s]暴击了！造成了[%d]点伤害, [%s]的剩余生命值: %d/%d",
+                        db.getFrom().getName(), w + m + ev, getName(), getChp(), getMhp()));
             } else {
-                System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]的剩余生命值: %d/%d", db.getFrom().getName(), w + m,
-                        getName(), getChp(), getMhp()));
+                System.out.println(String.format("[%s]造成了[%d]点伤害, [%s]的剩余生命值: %d/%d",
+                        db.getFrom().getName(), w + m + ev, getName(), getChp(), getMhp()));
             }
             boolean death = getChp() == 0;
             if (death) {
